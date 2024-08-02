@@ -102,6 +102,83 @@ class AddProductController extends Controller
             return redirect()->to(url('adminProduct'))->with('success', 'Product added successfully.');
         }
 
+        //Update product
+        public function update(Request $request, $id)
+        {
+            // Validate the request
+            $request->validate([
+                'product_name' => 'required|string|max:255',
+                'product_code' => 'required|string|max:255',
+                'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'additional_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'product_price' => 'required|numeric',
+                'product_discount' => 'nullable|numeric',
+                'product_weight' => 'nullable|numeric',
+                'description' => 'nullable|string',
+                'meta_title' => 'nullable|string|max:255',
+                'meta_description' => 'nullable|string|max:255',
+                'meta_keywords' => 'nullable|string|max:255',
+                'is_featured' => 'nullable|boolean',
+                'status' => 'required|boolean',
+            ]);
+
+            $product = Product::findOrFail($id);
+
+            // Handle main image upload
+            if ($request->hasFile('main_image')) {
+                $uploadCloudinary = cloudinary()->upload(
+                    $request->file('main_image')->getRealPath(),
+                    [
+                        'folder' => 'fresh/product_images',
+                        'resource_type' => 'auto',
+                        'transformation' => [
+                            'quality' => 'auto',
+                            'fetch_format' => 'auto',
+                        ]
+                    ]
+                );
+                $product->main_image = $uploadCloudinary->getSecurePath();
+            }
+
+            // Handle additional images upload
+            if ($request->hasFile('additional_images')) {
+                $additionalImagesPaths = [];
+                foreach ($request->file('additional_images') as $image) {
+                    $uploadCloudinary = cloudinary()->upload(
+                        $image->getRealPath(),
+                        [
+                            'folder' => 'fresh/products_additional',
+                            'resource_type' => 'auto',
+                            'transformation' => [
+                                'quality' => 'auto',
+                                'fetch_format' => 'auto',
+                            ]
+                        ]
+                    );
+                    $additionalImagesPaths[] = $uploadCloudinary->getSecurePath();
+                }
+                // Assuming `additional_images` is a JSON or array field in your database
+                $product->additional_images = json_encode($additionalImagesPaths);
+            }
+
+            // Update the product with other fields
+            $product->product_name = $request->input('product_name');
+            $product->product_code = $request->input('product_code');
+            $product->product_price = $request->input('product_price');
+            $product->product_discount = $request->input('product_discount');
+            $product->product_weight = $request->input('product_weight');
+            $product->description = $request->input('description');
+            $product->meta_title = $request->input('meta_title');
+            $product->meta_description = $request->input('meta_description');
+            $product->meta_keywords = $request->input('meta_keywords');
+            $product->is_featured = $request->input('is_featured') ? true : false;
+            $product->status = $request->input('status');
+            
+            $product->save();
+
+            return redirect()->to(url('adminProduct'))->with('success', 'Product updated successfully!');
+        }
+
     // Delete Category
     public function delete($id){
         Product::where('id', $id)->delete();

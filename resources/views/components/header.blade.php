@@ -1,3 +1,17 @@
+<?php
+    use Illuminate\Support\Facades\Auth;
+    use App\Models\Cart;
+    use App\Models\Product;
+    use App\Models\Category;
+    //For cart items 
+    // Get the ID of the authenticated user
+    $userId = Auth::id();
+        
+    // Count the number of cart records for this user
+    $cartItems = Cart::where('user_id', $userId)->with('product')->get();
+    $cartCount = Cart::where('user_id', $userId)->count();
+?>
+
 <nav class="navbar navbar-expand navbar-light navbar-bg">
                 <a class="sidebar-toggle js-sidebar-toggle">
           <i class="hamburger align-self-center"></i>
@@ -73,67 +87,53 @@
                         <li class="nav-item dropdown">
                             <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
                                 <div class="position-relative">
-                                    <i class="align-middle" data-feather="message-square"></i>
+                                    <i class="align-middle" data-feather="shopping-cart"></i>
+                                    <span class="indicator">
+                                        
+                                        @if($cartCount > 0)
+                                            <p>{{ $cartCount }}</p>
+                                        @else
+                                            <p>0</p>
+                                        @endif
+
+                                    </span>
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
                                 <div class="dropdown-menu-header">
                                     <div class="position-relative">
-                                        4 New Messages
+                                        Your Cart's
                                     </div>
                                 </div>
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-2">
-                                                <img src="img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
+                                    <div class="list-group">
+                                        @if($cartItems->isEmpty())
+                                            <div class="text-center">
+                                                <h1 class="text-danger">Your cart is empty.</h1>
+                                                <a href="{{ url('product') }}">
+                                                    <button class="btn btn-primary">Our Products</button>
+                                                </a>
                                             </div>
-                                            <div class="col-10 ps-2">
-                                                <div class="text-dark">Vanessa Tucker</div>
-                                                <div class="text-muted small mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
-                                                <div class="text-muted small mt-1">15m ago</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-2">
-                                                <img src="img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle" alt="William Harris">
-                                            </div>
-                                            <div class="col-10 ps-2">
-                                                <div class="text-dark">William Harris</div>
-                                                <div class="text-muted small mt-1">Curabitur ligula sapien euismod vitae.</div>
-                                                <div class="text-muted small mt-1">2h ago</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-2">
-                                                <img src="img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle" alt="Christina Mason">
-                                            </div>
-                                            <div class="col-10 ps-2">
-                                                <div class="text-dark">Christina Mason</div>
-                                                <div class="text-muted small mt-1">Pellentesque auctor neque nec urna.</div>
-                                                <div class="text-muted small mt-1">4h ago</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-2">
-                                                <img src="img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
-                                            </div>
-                                            <div class="col-10 ps-2">
-                                                <div class="text-dark">Sharon Lessman</div>
-                                                <div class="text-muted small mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
-                                                <div class="text-muted small mt-1">5h ago</div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                        @else
+                                            @foreach($cartItems as $cartItem)
+                                                <a href="#" class="list-group-item list-group-item-action">
+                                                    <div class="row g-0 align-items-center">
+                                                        <div class="col-2">
+                                                            <!-- Assuming `product` relationship is defined in Cart model -->
+                                                            <img src="{{ $cartItem->product->main_image }}" class="img-fluid rounded" alt="{{ $cartItem->product->product_name }}">
+                                                        </div>
+                                                        <div class="col-10 ps-2">
+                                                            <div class="fw-bold">{{ $cartItem->product->product_name }}</div>
+                                                            <div class="text-muted small mt-1">Price: N{{ $cartItem->product->product_price }}</div>
+                                                            <div class="text-muted small mt-1">Quantity: {{ $cartItem->quantity }}</div>
+                                                            <!-- Optional: Additional details can be displayed here -->
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                 <div class="dropdown-menu-footer">
-                                    <a href="#" class="text-muted">Show all messages</a>
+                                    <a href="{{ url('cart') }}" class="text-muted">Show all Cart's</a>
                                 </div>
                             </div>
                         </li>

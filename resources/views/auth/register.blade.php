@@ -65,7 +65,7 @@
                                             <x-input-error :messages="$errors->get('mobileOne')" class="mt-2" />
                                         </div>  
                                         <div class="mb-3">
-                                            <label class="form-label">BPhone Number Two (2)</label>
+                                            <label class="form-label">Phone Number Two (2)</label>
                                             <input class="form-control form-control-lg" type="number" name="mobileTwo" placeholder="Enter your Phone Number 1" required/>
                                             <x-input-error :messages="$errors->get('mobileTwo')" class="mt-2" />
                                         </div> 
@@ -85,7 +85,7 @@
                                             <x-input-error :messages="$errors->get('password')" class="mt-2" required/>
                                         </div>
                                        <div class="mb-3">
-                                            <label class="form-label">Password</label>
+                                            <label class="form-label">Confirm Password</label>
                                             <input class="form-control form-control-lg" type="password" name="password_confirmation" placeholder="Enter password" />
                                              <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" required/>
                                         </div>

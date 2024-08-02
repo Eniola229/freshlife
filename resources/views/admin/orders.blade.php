@@ -18,6 +18,7 @@
 
 	<link href="css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
     <style>
@@ -38,59 +39,9 @@
 		<div class="main">
 			@include('components.header')
 	</nav>
-
-	<main class="content">		
-        <div class="container">
-            <h1>Add New Category</h1>
-
-            <!-- Display validation errors -->
-            @if($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <!-- Category form -->
-            <form action="{{ route('category.store') }}" method="post">
-                @csrf
-                <div class="mb-3">
-                    <label for="categoryName" class="form-label">Category Name</label>
-                    <input type="text" class="form-control" id="categoryName" name="name" value="{{ old('name') }}" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Add Category</button>
-            </form>
-        </div>
-
-         <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th> Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="productTableBody">
-            @foreach($categories as $category)
-                <tr>
-                    <td>1</td>
-                    <td>{{ $category->name }}</td>
-                    <td>
-                        <form style="display: inline-block;" action="{{ route('category.delete', $category->id) }}" method="POST">
-                        	@csrf
-                        	@method('DELETE')
-                        	<button class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-
-	</main>
+	         <main class="content">	
+ 
+			</main>
 
 			<footer class="footer">
 				<div class="container-fluid">
@@ -123,6 +74,7 @@
 	</div>
 
 	<script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
  <script>
         // Search functionality
         document.getElementById('searchInput').addEventListener('input', function() {
@@ -137,21 +89,7 @@
                 row.style.display = found ? '' : 'none';
             });
         });
-    </script> <script>
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function() {
-            var searchTerm = this.value.toLowerCase();
-            var rows = document.querySelectorAll('#productTableBody tr');
-            
-            rows.forEach(function(row) {
-                var cells = row.querySelectorAll('td');
-                var found = Array.from(cells).some(function(cell) {
-                    return cell.textContent.toLowerCase().includes(searchTerm);
-                });
-                row.style.display = found ? '' : 'none';
-            });
-        });
-    </script>
+    </script> 
 
 </body>
 

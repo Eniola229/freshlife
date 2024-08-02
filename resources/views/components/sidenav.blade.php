@@ -23,8 +23,8 @@
                 </a>
             </li>
 
-            <li class="sidebar-item {{ request()->is('pages-blank.html') && !request()->is('pages-profile.html') ? 'active' : '' }}">
-                <a class="sidebar-link" href="{{ url('pages-blank.html') }}">
+            <li class="sidebar-item {{ request()->is('product') && !request()->is('dashboard') ? 'active' : '' }}">
+                <a class="sidebar-link" href="{{ url('product') }}">
                     <i class="align-middle" data-feather="book"></i>
                     <span class="align-middle">Products</span>
                 </a>

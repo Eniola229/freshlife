@@ -51,7 +51,7 @@
     @endif
         <div class="container mt-5">
         <h2 class="mb-4">Add Product</h2>
-        <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('products.edit', $product->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-md-6 mb-3">
